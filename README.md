@@ -4,6 +4,8 @@ An easy way to pet your friends!
 
 The goal of pfpet is to be able to add the pet effect to many common pictures in a memorable URL.
 
+Current base URL: `https://pfpet.herokuapp.com/`
+
 ## Endpoints
 
 | URL                   | Description                              |
