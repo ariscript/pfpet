@@ -1,0 +1,8 @@
+/target
+
+.env
+
+.idea
+^.idea/modules.xml
+^.idea/pfpet.xml
+^.idea/vcs.xml
