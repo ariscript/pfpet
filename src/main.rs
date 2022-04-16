@@ -13,7 +13,9 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
 
-    let port = 8080;
+    // should panic if var doesn't exist or invalid
+    let port = std::env::var("PORT").unwrap();
+    let port = port.parse::<u16>().unwrap();
 
     HttpServer::new(|| {
         App::new()
