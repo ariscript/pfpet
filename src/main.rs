@@ -5,6 +5,7 @@ use actix_cors::Cors;
 use actix_web::{middleware, web, App, HttpServer};
 use dotenv::dotenv;
 use env_logger;
+use std::env;
 
 use routes::discord;
 
@@ -13,9 +14,10 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
 
-    // should panic if var doesn't exist or invalid
-    let port = std::env::var("PORT").unwrap();
-    let port = port.parse::<u16>().unwrap();
+    let port: u16 = env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string())
+        .parse()
+        .expect("PORT environment variable must be a number.");
 
     HttpServer::new(|| {
         App::new()
@@ -25,7 +27,7 @@ async fn main() -> std::io::Result<()> {
                 Cors::default()
                     .allow_any_origin()
                     .allow_any_header()
-                    .allowed_methods(["GET"])
+                    .allowed_methods(["GET"]),
             )
             .service(
                 web::scope("/discord")
@@ -33,7 +35,7 @@ async fn main() -> std::io::Result<()> {
                     .service(discord::discord_emoji),
             )
     })
-    .bind(("127.0.0.1", port))?
+    .bind(format!("0.0.0.0:{}", port))?
     .run()
     .await
 }
