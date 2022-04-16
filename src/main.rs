@@ -13,6 +13,8 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
 
+    let port = if std::env::var("MODE").unwrap() == String::from("development") { 8080 } else { 80 };
+
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Compress::default())
@@ -29,7 +31,7 @@ async fn main() -> std::io::Result<()> {
                     .service(discord::discord_emoji),
             )
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", port))?
     .run()
     .await
 }
