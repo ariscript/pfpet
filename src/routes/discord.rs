@@ -23,7 +23,7 @@ pub async fn discord_user(params: Path<String>) -> impl Responder {
 
 #[get("/emojis/{id}")]
 pub async fn discord_emoji(params: Path<String>) -> impl Responder {
-    let id: params.into_inner();
+    let id = params.into_inner();
     let emoji = emoji(&id).await;
 
     if let Err(_) = emoji {
