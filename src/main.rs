@@ -13,7 +13,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
 
-    let port = if std::env::var("MODE").unwrap() == String::from("development") { 8080 } else { 80 };
+    let port = 8080;
 
     HttpServer::new(|| {
         App::new()
