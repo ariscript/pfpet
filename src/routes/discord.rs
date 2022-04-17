@@ -4,7 +4,7 @@ use awc::http::StatusCode;
 
 use crate::lib::discord::{DiscordAPIUser, emoji};
 
-#[get("/users/{id}")]
+#[get("/users/{id}.gif")]
 pub async fn discord_user(params: Path<String>) -> impl Responder {
     let id = params.into_inner();
     let avatar = DiscordAPIUser::get(&id).await;
