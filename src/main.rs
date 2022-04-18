@@ -30,9 +30,8 @@ async fn main() -> std::io::Result<()> {
                     .allowed_methods(["GET"]),
             )
             .service(
-                web::scope("/discord")
+                web::scope("/d")
                     .service(discord::discord_user)
-                    .service(discord::discord_emoji),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?

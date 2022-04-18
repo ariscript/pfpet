@@ -2,12 +2,13 @@ use actix_web::web::Path;
 use actix_web::{get, HttpResponse, HttpResponseBuilder, Responder};
 use awc::http::StatusCode;
 
-use crate::lib::discord::{DiscordAPIUser, emoji};
+use crate::lib::discord::{get_avatar};
+use crate::lib::pet::convert_bytes;
 
-#[get("/users/{id}.gif")]
+#[get("/{id}.gif")]
 pub async fn discord_user(params: Path<String>) -> impl Responder {
     let id = params.into_inner();
-    let avatar = DiscordAPIUser::get(&id).await;
+    let avatar = get_avatar(&id).await;
 
     if let Err(_) = avatar {
         // cba figuring out why i can't use ?
@@ -15,24 +16,13 @@ pub async fn discord_user(params: Path<String>) -> impl Responder {
     }
 
     let avatar = avatar.unwrap();
+    let petted = convert_bytes(avatar);
 
-    HttpResponseBuilder::new(StatusCode::OK)
-        .content_type("image/gif")
-        .body(avatar)
-}
-
-#[get("/emojis/{id}")]
-pub async fn discord_emoji(params: Path<String>) -> impl Responder {
-    let id = params.into_inner();
-    let emoji = emoji(&id).await;
-
-    if let Err(_) = emoji {
-        return HttpResponse::new(StatusCode::NOT_FOUND);
+    if let Err(_) = petted {
+        return HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR);
     }
 
-    let emoji = emoji.unwrap();
-
     HttpResponseBuilder::new(StatusCode::OK)
         .content_type("image/gif")
-        .body(emoji)
+        .body(petted.unwrap())
 }

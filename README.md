@@ -8,10 +8,9 @@ Current base URL: `https://pfpet.herokuapp.com/`
 
 ## Endpoints
 
-| URL                   | Description                              |
-|-----------------------|------------------------------------------|
-| `/discord/users/{id}` | Gets a Discord user's avatar and pets it |
-| `/discord/emoji/{id}` | Gets a discord emoji and pets it         |
+| URL           | Description                              |
+|---------------|------------------------------------------|
+| `/d/{id}.gif` | Gets a Discord user's avatar and pets it |
 
 More endpoints will be added soon
 
