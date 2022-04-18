@@ -29,10 +29,7 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .allowed_methods(["GET"]),
             )
-            .service(
-                web::scope("/d")
-                    .service(discord::discord_user)
-            )
+            .service(web::scope("/d").service(discord::discord_user))
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()

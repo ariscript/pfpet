@@ -13,9 +13,7 @@ lazy_static! {
         let cache = Arc::new(Cache::new());
         let clone = cache.clone();
 
-        tokio::spawn(async move {
-            clone.monitor(4, 0.25, Duration::from_secs(3)).await
-        });
+        tokio::spawn(async move { clone.monitor(4, 0.25, Duration::from_secs(3)).await });
 
         cache
     };
@@ -69,7 +67,9 @@ pub async fn get_avatar(id: &String) -> Result<Bytes, Box<dyn Error>> {
         .body()
         .await?;
 
-    CACHE.insert(id.clone(), img.clone(), Duration::from_secs(3600)).await;
+    CACHE
+        .insert(id.clone(), img.clone(), Duration::from_secs(3600))
+        .await;
 
     Ok(img)
 }

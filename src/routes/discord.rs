@@ -2,7 +2,7 @@ use actix_web::web::Path;
 use actix_web::{get, HttpResponse, HttpResponseBuilder, Responder};
 use awc::http::StatusCode;
 
-use crate::lib::discord::{get_avatar};
+use crate::lib::discord::get_avatar;
 use crate::lib::pet::convert_bytes;
 
 #[get("/{id}.gif")]
