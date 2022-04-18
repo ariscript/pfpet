@@ -3,6 +3,7 @@ use actix_web::web::Bytes;
 use lazy_static::lazy_static;
 use retainer::Cache;
 use serde::Deserialize;
+use tracing::debug;
 use std::env;
 use std::error::Error;
 use std::sync::Arc;
@@ -35,10 +36,12 @@ struct DiscordAPIUser {
 pub async fn get_avatar(id: &String) -> Result<Bytes, Box<dyn Error>> {
     let cache_entry = CACHE.get(id).await;
     if let Some(guard) = cache_entry {
+        debug!("Avatar for user {} in cache.", id);
         let bytes = guard.value().clone();
         return Ok(bytes);
     }
 
+    debug!("Avatar for user {} not in cache. fetching...", id);
     let avatar = awc::Client::default()
         .get(format!("https://discord.com/api/v9/users/{}", id))
         .insert_header((

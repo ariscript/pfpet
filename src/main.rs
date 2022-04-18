@@ -5,6 +5,9 @@ use actix_cors::Cors;
 use actix_web::{middleware, web, App, HttpServer};
 use dotenv::dotenv;
 use env_logger;
+use tracing::Level;
+use tracing_actix_web::TracingLogger;
+use tracing_subscriber::FmtSubscriber;
 use std::env;
 
 use routes::discord;
@@ -14,6 +17,13 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
 
+    let sub = FmtSubscriber::builder()
+        .with_max_level(Level::DEBUG)
+        .finish();
+
+    tracing::subscriber::set_global_default(sub)
+        .expect("Setting tracing default subscriber failed.");
+
     let port: u16 = env::var("PORT")
         .unwrap_or_else(|_| "3000".to_string())
         .parse()
@@ -22,7 +32,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Compress::default())
-            .wrap(middleware::Logger::default())
+            .wrap(TracingLogger::default())
             .wrap(
                 Cors::default()
                     .allow_any_origin()

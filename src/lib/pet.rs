@@ -28,12 +28,12 @@ lazy_static! {
     ];
 }
 
-pub fn load_png(buf: &[u8]) -> Result<RgbaImage, ImageError> {
+fn load_png(buf: &[u8]) -> Result<RgbaImage, ImageError> {
     let dyn_image = load_from_memory_with_format(buf, ImageFormat::Png)?;
     Ok(dyn_image.to_rgba8())
 }
 
-pub fn generate(
+fn generate(
     image: RgbaImage,
     filter: FilterType,
 ) -> ImageResult<impl IntoIterator<Item = Frame>> {
@@ -84,7 +84,7 @@ pub fn generate(
     Ok(frames)
 }
 
-pub fn encode_gif(
+fn encode_gif(
     frames: impl IntoIterator<Item = Frame>,
     speed: i32,
 ) -> Result<Vec<u8>, ImageError> {
