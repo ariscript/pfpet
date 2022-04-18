@@ -68,7 +68,7 @@ pub async fn get_avatar(id: &String) -> Result<Bytes, Box<dyn Error>> {
         .await?;
 
     CACHE
-        .insert(id.clone(), img.clone(), Duration::from_secs(3600))
+        .insert(id.clone(), img.clone(), Duration::from_secs(1800)) // 30 minutes
         .await;
 
     Ok(img)
