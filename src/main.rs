@@ -9,7 +9,7 @@ use std::env;
 
 use routes::discord;
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
