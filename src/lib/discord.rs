@@ -37,13 +37,9 @@ struct DiscordAPIUser {
 pub async fn get_avatar(id: &String) -> Result<Bytes, Box<dyn Error>> {
     let cache_entry = CACHE.get(id).await;
     if let Some(guard) = cache_entry {
-        println!("Found avatar for user {} in cache.", id);
-
         let bytes = guard.value().clone();
         return Ok(bytes);
     }
-
-    println!("Avatar for user {} not in cache, fetching...", id);
 
     let avatar = awc::Client::default()
         .get(format!("https://discord.com/api/v9/users/{}", id))
