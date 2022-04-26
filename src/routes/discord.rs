@@ -5,6 +5,9 @@ use awc::http::StatusCode;
 use crate::lib::discord::get_avatar;
 use crate::lib::pet::convert_bytes;
 
+/// Max number of seconds that responses should be cached
+pub static MAX_AGE: u64 = 1800;
+
 #[get("/{id}.gif")]
 pub async fn discord_user(params: Path<String>) -> impl Responder {
     let id = params.into_inner();
