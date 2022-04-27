@@ -7,24 +7,22 @@ use image::{load_from_memory_with_format, Delay, Frame, ImageError, ImageFormat,
 use lazy_static::lazy_static;
 use std::error::Error;
 
-const FRAMES: u32 = 10;
-const RESOLUTION: (u32, u32) = (112, 112);
+const FRAMES: u32 = 8;
+const RESOLUTION: (u32, u32) = (128, 115);
 
 mod hand_raw {
-    pub static HAND_0: &[u8; 15758] = include_bytes!("../res/pet-0.png");
-    pub static HAND_1: &[u8; 16013] = include_bytes!("../res/pet-1.png");
-    pub static HAND_2: &[u8; 16284] = include_bytes!("../res/pet-2.png");
-    pub static HAND_3: &[u8; 16199] = include_bytes!("../res/pet-3.png");
-    pub static HAND_4: &[u8; 14816] = include_bytes!("../res/pet-4.png");
+    pub static BONK_0: &[u8; 15117] = include_bytes!("../res/bonk-0.png");
+    pub static BONK_1: &[u8; 19351] = include_bytes!("../res/bonk-1.png");
+    pub static BONK_2: &[u8; 18317] = include_bytes!("../res/bonk-2.png");
+    pub static BONK_3: &[u8; 17831] = include_bytes!("../res/bonk-3.png");
 }
 
 lazy_static! {
-    static ref HANDS: Vec<RgbaImage> = vec![
-        load_png(hand_raw::HAND_0).unwrap(),
-        load_png(hand_raw::HAND_1).unwrap(),
-        load_png(hand_raw::HAND_2).unwrap(),
-        load_png(hand_raw::HAND_3).unwrap(),
-        load_png(hand_raw::HAND_4).unwrap(),
+    static ref BONKS: Vec<RgbaImage> = vec![
+        load_png(hand_raw::BONK_0).unwrap(),
+        load_png(hand_raw::BONK_1).unwrap(),
+        load_png(hand_raw::BONK_2).unwrap(),
+        load_png(hand_raw::BONK_3).unwrap(),
     ];
 }
 
@@ -45,7 +43,7 @@ fn generate(image: RgbaImage, filter: FilterType) -> ImageResult<impl IntoIterat
         let width = (width_scale * RESOLUTION.0 as f64) as u32;
         let height = (height_scale * RESOLUTION.1 as f64) as u32;
 
-        let offset_x = (((1.0 - width_scale) * 0.5 + 0.1) * RESOLUTION.0 as f64) as i64;
+        let offset_x = (((1.0 - width_scale) * 0.3 - 0.05) * RESOLUTION.0 as f64) as i64;
         let offset_y = (((1.0 - height_scale) - 0.08) * RESOLUTION.1 as f64) as i64;
 
         let calculate_then_resize = resize(&image, width, height, filter);
@@ -59,12 +57,12 @@ fn generate(image: RgbaImage, filter: FilterType) -> ImageResult<impl IntoIterat
             offset_y,
         );
 
-        for (pixel_hand, pixel_canvas) in HANDS[i as usize / 2]
+        for (pixel_bonk, pixel_canvas) in BONKS[i as usize / 4]
             .pixels()
             .zip(resize_then_overlay.pixels_mut())
         {
-            if !matches!(pixel_hand, Rgba([_, _, _, 0])) {
-                *pixel_canvas = *pixel_hand;
+            if !matches!(pixel_bonk, Rgba([_, _, _, 0])) {
+                *pixel_canvas = *pixel_bonk;
             }
         }
 
@@ -95,7 +93,7 @@ fn encode_gif(frames: impl IntoIterator<Item = Frame>, speed: i32) -> Result<Vec
 
 pub fn convert_bytes(png: Bytes) -> Result<Bytes, Box<dyn Error>> {
     let loaded = load_png(&png[..])?;
-    let petted = encode_gif(generate(loaded, FilterType::Lanczos3)?, 5)?;
+    let bonked = encode_gif(generate(loaded, FilterType::Lanczos3)?, 5)?;
 
-    Ok(Bytes::from(petted))
+    Ok(Bytes::from(bonked))
 }

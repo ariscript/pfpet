@@ -1,1 +1,2 @@
-pub mod discord;
+pub mod bonk;
+pub mod pet;

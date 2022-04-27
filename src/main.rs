@@ -2,16 +2,16 @@ pub mod lib;
 pub mod routes;
 
 use actix_cors::Cors;
-use actix_web::{dev::Service as _, middleware, web, App, HttpServer}; // need to bring the `Service` trait in scope
 use actix_web::http::header;
+use actix_web::{dev::Service as _, middleware, web, App, HttpServer}; // need to bring the `Service` trait in scope
 use dotenv::dotenv;
 use env_logger;
+use std::env;
 use tracing::Level;
 use tracing_actix_web::TracingLogger;
 use tracing_subscriber::FmtSubscriber;
-use std::env;
 
-use routes::discord;
+use routes::{bonk, pet};
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -47,12 +47,40 @@ async fn main() -> std::io::Result<()> {
 
                         async {
                             let mut res = fut.await?;
-                            res.headers_mut().insert(header::CACHE_CONTROL, header::HeaderValue::from_str(&format!("max-age={}", discord::MAX_AGE))?);
+                            res.headers_mut().insert(
+                                header::CACHE_CONTROL,
+                                header::HeaderValue::from_str(&format!(
+                                    "max-age={}",
+                                    pet::discord::MAX_AGE
+                                ))?,
+                            );
 
                             Ok(res)
                         }
                     })
-                    .service(discord::discord_user)
+                    .service(pet::discord::discord_user),
+            )
+            .service(
+                web::scope("/bonk").service(
+                    web::scope("/d")
+                        .wrap_fn(|req, srv| {
+                            let fut = srv.call(req);
+
+                            async {
+                                let mut res = fut.await?;
+                                res.headers_mut().insert(
+                                    header::CACHE_CONTROL,
+                                    header::HeaderValue::from_str(&format!(
+                                        "max-age={}",
+                                        bonk::discord::MAX_AGE
+                                    ))?,
+                                );
+
+                                Ok(res)
+                            }
+                        })
+                        .service(bonk::discord::discord_user),
+                ),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?
