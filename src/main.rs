@@ -11,7 +11,7 @@ use tracing_actix_web::TracingLogger;
 use tracing_subscriber::FmtSubscriber;
 use std::env;
 
-use routes::discord;
+use routes::*;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -53,6 +53,21 @@ async fn main() -> std::io::Result<()> {
                         }
                     })
                     .service(discord::discord_user)
+            )
+
+            .service(
+                web::scope("/gh")
+                    .wrap_fn(|req, srv| {
+                        let fut = srv.call(req);
+
+                        async {
+                            let mut res = fut.await?;
+                            res.headers_mut().insert(header::CACHE_CONTROL, header::HeaderValue::from_str(&format!("max-age={}", github::MAX_AGE))?);
+
+                            Ok(res)
+                        }
+                    })
+                    .service(github::github_user)
             )
     })
     .bind(format!("0.0.0.0:{}", port))?

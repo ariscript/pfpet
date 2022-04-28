@@ -11,6 +11,7 @@ Current base URL: `https://pfpet.herokuapp.com/`
 | URL           | Description                              |
 |---------------|------------------------------------------|
 | `/d/{id}.gif` | Gets a Discord user's avatar and pets it |
+| `/gh/{username}.gif` | Gets a Github user's / organization's avatar and pets it |
 
 More endpoints will be added soon
 
