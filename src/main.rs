@@ -15,7 +15,6 @@ use routes::{bonk, pet};
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-
     dotenv().ok();
     env_logger::init();
 
