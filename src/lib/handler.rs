@@ -5,7 +5,7 @@ use actix_web::{web, Resource};
 use actix_web::{HttpResponse, HttpResponseBuilder};
 use awc::http::StatusCode;
 
-pub fn handler<T, U>(fetcher: T, filter: U, path: &str) -> Resource
+pub fn handler<T, U>(path: &str, fetcher: T, filter: U) -> Resource
 where
     T: AvatarFetch + Clone + 'static,
     U: ImageFilter + Clone + 'static,
