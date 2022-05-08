@@ -1,3 +1,4 @@
+use super::ImageFilter;
 /// Code adapted from https://github.com/poly000/petpet-rs, licensed under the MIT License.
 use actix_web::web::Bytes;
 use image::codecs::gif::{GifEncoder, Repeat};
@@ -11,11 +12,11 @@ const FRAMES: u32 = 10;
 const RESOLUTION: (u32, u32) = (112, 112);
 
 mod hand_raw {
-    pub static HAND_0: &[u8; 15758] = include_bytes!("../res/0.png");
-    pub static HAND_1: &[u8; 16013] = include_bytes!("../res/1.png");
-    pub static HAND_2: &[u8; 16284] = include_bytes!("../res/2.png");
-    pub static HAND_3: &[u8; 16199] = include_bytes!("../res/3.png");
-    pub static HAND_4: &[u8; 14816] = include_bytes!("../res/4.png");
+    pub static HAND_0: &[u8; 15758] = include_bytes!("../../res/0.png");
+    pub static HAND_1: &[u8; 16013] = include_bytes!("../../res/1.png");
+    pub static HAND_2: &[u8; 16284] = include_bytes!("../../res/2.png");
+    pub static HAND_3: &[u8; 16199] = include_bytes!("../../res/3.png");
+    pub static HAND_4: &[u8; 14816] = include_bytes!("../../res/4.png");
 }
 
 lazy_static! {
@@ -33,10 +34,7 @@ fn load_png(buf: &[u8]) -> Result<RgbaImage, ImageError> {
     Ok(dyn_image.to_rgba8())
 }
 
-fn generate(
-    image: RgbaImage,
-    filter: FilterType,
-) -> ImageResult<impl IntoIterator<Item = Frame>> {
+fn generate(image: RgbaImage, filter: FilterType) -> ImageResult<impl IntoIterator<Item = Frame>> {
     let mut frames = Vec::<Frame>::new();
 
     for i in 0..FRAMES {
@@ -84,10 +82,7 @@ fn generate(
     Ok(frames)
 }
 
-fn encode_gif(
-    frames: impl IntoIterator<Item = Frame>,
-    speed: i32,
-) -> Result<Vec<u8>, ImageError> {
+fn encode_gif(frames: impl IntoIterator<Item = Frame>, speed: i32) -> Result<Vec<u8>, ImageError> {
     let mut buf: Vec<u8> = vec![];
 
     {
@@ -99,9 +94,14 @@ fn encode_gif(
     Ok(buf)
 }
 
-pub fn convert_bytes(png: Bytes) -> Result<Bytes, Box<dyn Error>> {
-    let loaded = load_png(&png[..])?;
-    let petted = encode_gif(generate(loaded, FilterType::Lanczos3)?, 5)?;
+#[derive(Clone)]
+pub struct Pet;
 
-    Ok(Bytes::from(petted))
+impl ImageFilter for Pet {
+    fn convert_bytes(&self, png: Bytes) -> Result<Bytes, Box<dyn Error>> {
+        let loaded = load_png(&png[..])?;
+        let petted = encode_gif(generate(loaded, FilterType::Lanczos3)?, 5)?;
+
+        Ok(Bytes::from(petted))
+    }
 }
