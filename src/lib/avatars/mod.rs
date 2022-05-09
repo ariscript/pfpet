@@ -3,6 +3,7 @@ use async_trait::async_trait;
 use std::error::Error;
 
 pub mod discord;
+pub mod github;
 
 #[async_trait(?Send)]
 pub trait AvatarFetch {

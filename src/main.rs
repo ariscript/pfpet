@@ -1,6 +1,6 @@
 pub mod lib;
 
-use crate::lib::avatars::discord::Discord;
+use crate::lib::avatars::{discord::Discord, github::Github};
 use crate::lib::avatars::AvatarFetch;
 use crate::lib::filters::pet::Pet;
 use crate::lib::handler::handler;
@@ -47,6 +47,16 @@ async fn main() -> std::io::Result<()> {
                         format!("max-age={}", Discord::cache_max_length()),
                     )))
                     .service(handler("/{id}.gif", Discord, Pet)),
+
+            )
+
+            .service(
+                web::scope("/gh")
+                    .wrap(middleware::DefaultHeaders::new().add((
+                        "Cache-Control",
+                        format!("max-age={}", Github::cache_max_length()),
+                    )))
+                    .service(handler("/{username}.gif", Github, Pet)),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?
