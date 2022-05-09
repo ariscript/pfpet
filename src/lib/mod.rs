@@ -1,3 +1,3 @@
-pub mod bonk;
-pub mod discord;
-pub mod pet;
+pub mod avatars;
+pub mod filters;
+pub mod handler;
