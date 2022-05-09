@@ -46,9 +46,8 @@ async fn main() -> std::io::Result<()> {
                         "Cache-Control",
                         format!("max-age={}", Discord::cache_max_length()),
                     )))
-                    .service(handler(Discord, Pet, "/{id}.gif"))
-                    .service(handler(Discord, Bonk, "/bonk/{id}.gif"))
-
+                    .service(handler("/{id}.gif", Discord, Pet))
+                    .service(handler("/bonk/{id}.gif", Discord, Bonk)),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?
