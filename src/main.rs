@@ -1,7 +1,7 @@
 pub mod lib;
 
-use crate::lib::avatars::{discord::Discord, github::Github};
 use crate::lib::avatars::AvatarFetch;
+use crate::lib::avatars::{discord::Discord, github::Github};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use actix_cors::Cors;
@@ -40,7 +40,6 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .allowed_methods(["GET"]),
             )
-      
             .service(
                 web::scope("/d")
                     .wrap(middleware::DefaultHeaders::new().add((
@@ -50,7 +49,6 @@ async fn main() -> std::io::Result<()> {
                     .service(handler("/{id}.gif", Discord, Pet))
                     .service(handler("/bonk/{id}.gif", Discord, Bonk)),
             )
-
             .service(
                 web::scope("/gh")
                     .wrap(middleware::DefaultHeaders::new().add((
@@ -58,6 +56,7 @@ async fn main() -> std::io::Result<()> {
                         format!("max-age={}", Github::cache_max_length()),
                     )))
                     .service(handler("/{username}.gif", Github, Pet)),
+            )
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
