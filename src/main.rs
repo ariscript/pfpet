@@ -55,7 +55,8 @@ async fn main() -> std::io::Result<()> {
                         "Cache-Control",
                         format!("max-age={}", Github::cache_max_length()),
                     )))
-                    .service(handler("/{username}.gif", Github, Pet)),
+                    .service(handler("/{username}.gif", Github, Pet))
+                    .service(handler("/bonk/{username}.gif", Github, Bonk)),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?
