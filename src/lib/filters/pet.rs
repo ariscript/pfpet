@@ -1,12 +1,11 @@
 /// Code adapted from https://github.com/poly000/petpet-rs, licensed under the MIT License.
 use actix_web::web::Bytes;
-use image::codecs::gif::{GifEncoder, Repeat};
 use image::error::ImageResult;
 use image::imageops::{overlay, resize, FilterType};
 use image::{load_from_memory_with_format, Delay, Frame, ImageError, ImageFormat, Rgba, RgbaImage};
 use lazy_static::lazy_static;
 use std::error::Error;
-use super::ImageFilter;
+use super::{ImageFilter, encode_gif};
 
 const FRAMES: u32 = 10;
 const RESOLUTION: (u32, u32) = (112, 112);
@@ -80,18 +79,6 @@ fn generate(image: RgbaImage, filter: FilterType) -> ImageResult<impl IntoIterat
         frames.push(overlay_then_delay);
     }
     Ok(frames)
-}
-
-fn encode_gif(frames: impl IntoIterator<Item = Frame>, speed: i32) -> Result<Vec<u8>, ImageError> {
-    let mut buf: Vec<u8> = vec![];
-
-    {
-        let mut encoder = GifEncoder::new_with_speed(&mut buf, speed);
-        encoder.set_repeat(Repeat::Infinite)?;
-        encoder.encode_frames(frames)?;
-    }
-
-    Ok(buf)
 }
 
 #[derive(Clone)]

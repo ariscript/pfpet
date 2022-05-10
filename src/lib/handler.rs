@@ -7,8 +7,8 @@ use awc::http::StatusCode;
 
 pub fn handler<T, U>(path: &str, fetcher: T, filter: U) -> Resource
 where
-    T: AvatarFetch + Clone + 'static,
-    U: ImageFilter + Clone + 'static,
+    T: AvatarFetch + 'static,
+    U: ImageFilter + 'static,
 {
     web::resource(path).route(web::get().to(move |params: Path<String>| {
         let id = params.into_inner();
