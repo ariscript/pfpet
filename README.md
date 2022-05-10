@@ -9,10 +9,12 @@ Current base URL: `https://pfpet.herokuapp.com/`
 
 > Note: The `.gif` extension in the URL is required because the Discord client will only render as a static image if there is no "extension".
 
-| URL                | Description                               |
-|--------------------|-------------------------------------------|
-| `/d/{id}.gif`      | Gets a Discord user's avatar and pets it  |
-| `/d/bonk/{id}.gif` | Gets a Discord user's avatar and bonks it |
+| URL                       | Description                               |
+|---------------------------|-------------------------------------------|
+| `/d/{id}.gif`             | Gets a Discord user's avatar and pets it  |
+| `/d/bonk/{id}.gif`        | Gets a Discord user's avatar and bonks it |
+| `/gh/{username}.gif`      | Gets a GitHub user's avatar and pets it   |
+| `/gh/bonk/{username}.gif` | Gets a GitHub user's avatar and pets it   |
 
 More endpoints will be added soon... You can help too!
 
