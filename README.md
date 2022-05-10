@@ -1,18 +1,25 @@
 # pfpet
 
-An easy way to pet your friends!
-
-The goal of pfpet is to be able to add the pet effect to many common pictures in a memorable URL.
+A quick and easy way to apply filters to your friend's online avatars!
+Just place their username/id in the right route and voilà, you have their avatar being petted or bonked or what have you.
 
 Current base URL: `https://pfpet.herokuapp.com/`
 
 ## Endpoints
 
-| URL           | Description                              |
-|---------------|------------------------------------------|
-| `/d/{id}.gif` | Gets a Discord user's avatar and pets it |
+> Note: The `.gif` extension in the URL is required because the Discord client will only render as a static image if there is no "extension".
 
-More endpoints will be added soon
+| URL                | Description                               |
+|--------------------|-------------------------------------------|
+| `/d/{id}.gif`      | Gets a Discord user's avatar and pets it  |
+| `/d/bonk/{id}.gif` | Gets a Discord user's avatar and bonks it |
+
+More endpoints will be added soon... You can help too!
+
+## Contributing
+
+PRs adding new filters or image sources, or any other new features, are encouraged.
+Just fork this repository, make your changes, and open a pull request.
 
 ## License
 
