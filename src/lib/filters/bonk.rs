@@ -1,4 +1,3 @@
-use super::ImageFilter;
 /// Code adapted from https://github.com/poly000/petpet-rs, licensed under the MIT License.
 use actix_web::web::Bytes;
 use image::codecs::gif::{GifEncoder, Repeat};
@@ -7,15 +6,16 @@ use image::imageops::{overlay, resize, FilterType};
 use image::{load_from_memory_with_format, Delay, Frame, ImageError, ImageFormat, Rgba, RgbaImage};
 use lazy_static::lazy_static;
 use std::error::Error;
+use super::ImageFilter;
 
 const FRAMES: u32 = 8;
 const RESOLUTION: (u32, u32) = (128, 115);
 
 mod bonk_raw {
-    pub static BONK_0: &[u8; 15117] = include_bytes!("../../res/bonk-0.png");
-    pub static BONK_1: &[u8; 19351] = include_bytes!("../../res/bonk-1.png");
-    pub static BONK_2: &[u8; 18317] = include_bytes!("../../res/bonk-2.png");
-    pub static BONK_3: &[u8; 17831] = include_bytes!("../../res/bonk-3.png");
+    pub static BONK_0: &[u8; 15117] = include_bytes!("../../res/bonk/0.png");
+    pub static BONK_1: &[u8; 19351] = include_bytes!("../../res/bonk/1.png");
+    pub static BONK_2: &[u8; 18317] = include_bytes!("../../res/bonk/2.png");
+    pub static BONK_3: &[u8; 17831] = include_bytes!("../../res/bonk/3.png");
 }
 
 lazy_static! {
