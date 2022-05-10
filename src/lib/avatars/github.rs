@@ -33,12 +33,12 @@ impl AvatarFetch for Github {
     async fn get_avatar(&self, username: &String) -> Result<Bytes, Box<dyn Error>> {
         let cache_entry = CACHE.get(username).await;
         if let Some(guard) = cache_entry {
-            debug!("Avatar for user {} in cache.", username);
+            debug!("github: Avatar for user {} in cache.", username);
             let bytes = guard.value().clone();
             return Ok(bytes);
         }
 
-        debug!("Avatar for user {} not in cache. fetching...", &username);
+        debug!("github: Avatar for user {} not in cache. fetching...", &username);
         let mut res = awc::Client::default()
             .get(format!(
                 "https://github.com/{}.png?size=128",

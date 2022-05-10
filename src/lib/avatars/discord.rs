@@ -41,12 +41,12 @@ impl AvatarFetch for Discord {
     async fn get_avatar(&self, id: &String) -> Result<Bytes, Box<dyn Error>> {
         let cache_entry = CACHE.get(id).await;
         if let Some(guard) = cache_entry {
-            debug!("Avatar for user {} in cache.", id);
+            debug!("discord: Avatar for user {} in cache.", id);
             let bytes = guard.value().clone();
             return Ok(bytes);
         }
 
-        debug!("Avatar for user {} not in cache. fetching...", &id);
+        debug!("discord: Avatar for user {} not in cache. fetching...", &id);
         let mut res = awc::Client::default()
             .get(format!("https://discord.com/api/v9/users/{}", &id))
             .insert_header((
