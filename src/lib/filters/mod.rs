@@ -1,6 +1,7 @@
 use actix_web::web::Bytes;
 use std::error::Error;
 
+pub mod bonk;
 pub mod pet;
 
 pub trait ImageFilter {

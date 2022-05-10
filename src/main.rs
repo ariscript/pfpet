@@ -2,7 +2,7 @@ pub mod lib;
 
 use crate::lib::avatars::discord::Discord;
 use crate::lib::avatars::AvatarFetch;
-use crate::lib::filters::pet::Pet;
+use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use actix_cors::Cors;
 use actix_web::{middleware, web, App, HttpServer}; // need to bring the `Service` trait in scope
@@ -46,7 +46,8 @@ async fn main() -> std::io::Result<()> {
                         "Cache-Control",
                         format!("max-age={}", Discord::cache_max_length()),
                     )))
-                    .service(handler("/{id}.gif", Discord, Pet)),
+                    .service(handler("/{id}.gif", Discord, Pet))
+                    .service(handler("/bonk/{id}.gif", Discord, Bonk)),
             )
     })
     .bind(format!("0.0.0.0:{}", port))?
