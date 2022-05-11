@@ -1,5 +1,4 @@
 use super::AvatarFetch;
-use actix_web::error::ErrorNotFound;
 use actix_web::web::Bytes;
 use async_trait::async_trait;
 use lazy_static::lazy_static;
@@ -26,7 +25,8 @@ lazy_static! {
 /// Only includes `avatar` because other fields don't matter.
 #[derive(Debug, Deserialize)]
 struct DiscordAPIUser {
-    pub avatar: Option<String>,
+    avatar: Option<String>,
+    discriminator: String,
 }
 
 #[derive(Clone)]
@@ -60,23 +60,19 @@ impl AvatarFetch for Discord {
             .send()
             .await?;
 
-        let avatar = res.json::<DiscordAPIUser>().await?.avatar;
+        let user = res.json::<DiscordAPIUser>().await?;
 
-        if let None = avatar {
-            return Err(Box::new(ErrorNotFound("User has no avatar.")));
-        }
+        let url = match user.avatar {
+            Some(hash) => format!("https://cdn.discordapp.com/avatars/{}/{}.png?size=128", &id, &hash),
+            None => format!("https://cdn.discordapp.com/embed/avatars/{}.png?size=128", user.discriminator.parse::<u16>()? % 5),
+        };
 
-        let avatar = avatar.unwrap();
-
-        let mut res = awc::Client::default()
-            .get(format!(
-                "https://cdn.discordapp.com/avatars/{}/{}.png?size=128",
-                &id, avatar
-            ))
+        let img = awc::Client::default()
+            .get(url)
             .send()
+            .await?
+            .body()
             .await?;
-
-        let img = res.body().await?;
 
         CACHE
             .insert(id.clone(), img.clone(), Duration::from_secs(1800)) // 30 minutes
