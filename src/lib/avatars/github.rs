@@ -54,7 +54,7 @@ impl AvatarFetch for Github {
         }
 
         CACHE
-            .insert(username.clone(), img.clone(), Duration::from_secs(1800)) // 30 minutes
+            .insert(username.clone(), img.clone(), Duration::from_secs(Self::cache_max_length())) // 30 minutes
             .await;
 
         Ok(img)
