@@ -1,4 +1,5 @@
 use super::AvatarFetch;
+use actix_web::error::ErrorNotFound;
 use actix_web::web::Bytes;
 use async_trait::async_trait;
 use lazy_static::lazy_static;
@@ -7,7 +8,6 @@ use serde::Deserialize;
 use std::error::Error;
 use std::sync::Arc;
 use std::time::Duration;
-use actix_web::error::ErrorNotFound;
 use tracing::debug;
 
 lazy_static! {
@@ -50,9 +50,15 @@ impl AvatarFetch for Reddit {
             return Ok(bytes);
         }
 
-        debug!("reddit: Avatar for user {} not in cache. fetching...", &username);
+        debug!(
+            "reddit: Avatar for user {} not in cache. fetching...",
+            &username
+        );
         let mut res = awc::Client::default()
-            .get(format!("https://www.reddit.com/user/{}/about.json", &username))
+            .get(format!(
+                "https://www.reddit.com/user/{}/about.json",
+                &username
+            ))
             .send()
             .await?;
 
@@ -60,22 +66,23 @@ impl AvatarFetch for Reddit {
         debug!("{:?}", user);
 
         if let None = user.data.icon_img {
-            return Err(Box::new(ErrorNotFound("icon_img not present for this user")));
+            return Err(Box::new(ErrorNotFound(
+                "icon_img not present for this user",
+            )));
         }
 
         let url = user.data.icon_img.unwrap();
         let url = url.split("?").collect::<Vec<_>>()[0];
         debug!("reddit: {user} url: {url}", user = username, url = url);
 
-        let img = awc::Client::default()
-            .get(url)
-            .send()
-            .await?
-            .body()
-            .await?;
+        let img = awc::Client::default().get(url).send().await?.body().await?;
 
         CACHE
-            .insert(username.clone(), img.clone(), Duration::from_secs(Self::cache_max_length())) // 30 minutes
+            .insert(
+                username.clone(),
+                img.clone(),
+                Duration::from_secs(Self::cache_max_length()),
+            ) // 30 minutes
             .await;
 
         Ok(img)

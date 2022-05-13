@@ -63,19 +63,24 @@ impl AvatarFetch for Discord {
         let user: DiscordAPIUser = res.json().await?;
 
         let url = match user.avatar {
-            Some(hash) => format!("https://cdn.discordapp.com/avatars/{}/{}.png?size=128", &id, &hash),
-            None => format!("https://cdn.discordapp.com/embed/avatars/{}.png?size=128", user.discriminator.parse::<u16>()? % 5),
+            Some(hash) => format!(
+                "https://cdn.discordapp.com/avatars/{}/{}.png?size=128",
+                &id, &hash
+            ),
+            None => format!(
+                "https://cdn.discordapp.com/embed/avatars/{}.png?size=128",
+                user.discriminator.parse::<u16>()? % 5
+            ),
         };
 
-        let img = awc::Client::default()
-            .get(url)
-            .send()
-            .await?
-            .body()
-            .await?;
+        let img = awc::Client::default().get(url).send().await?.body().await?;
 
         CACHE
-            .insert(id.clone(), img.clone(), Duration::from_secs(Self::cache_max_length())) // 30 minutes
+            .insert(
+                id.clone(),
+                img.clone(),
+                Duration::from_secs(Self::cache_max_length()),
+            ) // 30 minutes
             .await;
 
         Ok(img)

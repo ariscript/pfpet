@@ -1,3 +1,4 @@
+use super::{encode_gif, ImageFilter};
 /// Code adapted from https://github.com/poly000/petpet-rs, licensed under the MIT License.
 use actix_web::web::Bytes;
 use image::error::ImageResult;
@@ -5,7 +6,6 @@ use image::imageops::{overlay, resize, FilterType};
 use image::{load_from_memory_with_format, Delay, Frame, ImageError, ImageFormat, Rgba, RgbaImage};
 use lazy_static::lazy_static;
 use std::error::Error;
-use super::{ImageFilter, encode_gif};
 
 const FRAMES: u32 = 10;
 const RESOLUTION: (u32, u32) = (112, 112);

@@ -20,7 +20,6 @@ lazy_static! {
     };
 }
 
-
 #[derive(Clone)]
 pub struct Github;
 
@@ -38,26 +37,29 @@ impl AvatarFetch for Github {
             return Ok(bytes);
         }
 
-        debug!("github: Avatar for user {} not in cache. fetching...", &username);
+        debug!(
+            "github: Avatar for user {} not in cache. fetching...",
+            &username
+        );
         let mut res = awc::Client::default()
-            .get(format!(
-                "https://github.com/{}.png?size=128",
-                &username
-            ))
+            .get(format!("https://github.com/{}.png?size=128", &username))
             .send()
             .await?;
 
         let img = res.body().await?;
 
         if img.is_empty() {
-            return Err(Box::new(ErrorNotFound("User doesn't exist")))
+            return Err(Box::new(ErrorNotFound("User doesn't exist")));
         }
 
         CACHE
-            .insert(username.clone(), img.clone(), Duration::from_secs(Self::cache_max_length())) // 30 minutes
+            .insert(
+                username.clone(),
+                img.clone(),
+                Duration::from_secs(Self::cache_max_length()),
+            ) // 30 minutes
             .await;
 
         Ok(img)
     }
 }
-
