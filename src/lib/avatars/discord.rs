@@ -60,7 +60,7 @@ impl AvatarFetch for Discord {
             .send()
             .await?;
 
-        let user = res.json::<DiscordAPIUser>().await?;
+        let user: DiscordAPIUser = res.json().await?;
 
         let url = match user.avatar {
             Some(hash) => format!("https://cdn.discordapp.com/avatars/{}/{}.png?size=128", &id, &hash),

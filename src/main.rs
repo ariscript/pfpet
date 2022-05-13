@@ -5,13 +5,14 @@ use crate::lib::avatars::{discord::Discord, github::Github};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use actix_cors::Cors;
-use actix_web::{middleware, web, App, HttpServer}; // need to bring the `Service` trait in scope
+use actix_web::{middleware, web, App, HttpServer};
 use dotenv::dotenv;
 use env_logger;
 use std::env;
 use tracing::Level;
 use tracing_actix_web::TracingLogger;
 use tracing_subscriber::FmtSubscriber;
+use crate::lib::avatars::reddit::Reddit;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -57,6 +58,15 @@ async fn main() -> std::io::Result<()> {
                     )))
                     .service(handler("/{username}.gif", Github, Pet))
                     .service(handler("/bonk/{username}.gif", Github, Bonk)),
+            )
+            .service(
+                web::scope("/ru")
+                    .wrap(middleware::DefaultHeaders::new().add((
+                        "Cache-Control",
+                        format!("max-age={}", Reddit::cache_max_length()),
+                    )))
+                    .service(handler("/{username}.gif", Reddit, Pet))
+                    .service(handler("/bonk/{username}.gif", Reddit, Bonk))
             )
     })
     .bind(format!("0.0.0.0:{}", port))?

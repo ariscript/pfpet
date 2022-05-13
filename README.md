@@ -15,6 +15,8 @@ Current base URL: `https://pfpet.herokuapp.com/`
 | `/d/bonk/{id}.gif`        | Gets a Discord user's avatar and bonks it |
 | `/gh/{username}.gif`      | Gets a GitHub user's avatar and pets it   |
 | `/gh/bonk/{username}.gif` | Gets a GitHub user's avatar and pets it   |
+| `/ru/{username}.gif`      | Gets a Reddit user's avatar and pets it   |
+| `/ru/bonk/{username}.gif` | Gets a Reddit user's avatar and bonks it  |
 
 More endpoints will be added soon... You can help too!
 
