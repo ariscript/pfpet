@@ -1,9 +1,11 @@
 pub mod lib;
 
+use crate::lib::avatars::reddit::Reddit;
 use crate::lib::avatars::AvatarFetch;
 use crate::lib::avatars::{discord::Discord, github::Github};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
+use crate::lib::service::from_fetcher;
 use actix_cors::Cors;
 use actix_web::{middleware, web, App, HttpServer};
 use dotenv::dotenv;
@@ -12,7 +14,6 @@ use std::env;
 use tracing::Level;
 use tracing_actix_web::TracingLogger;
 use tracing_subscriber::FmtSubscriber;
-use crate::lib::avatars::reddit::Reddit;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -41,33 +42,9 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_header()
                     .allowed_methods(["GET"]),
             )
-            .service(
-                web::scope("/d")
-                    .wrap(middleware::DefaultHeaders::new().add((
-                        "Cache-Control",
-                        format!("max-age={}", Discord::cache_max_length()),
-                    )))
-                    .service(handler("/{id}.gif", Discord, Pet))
-                    .service(handler("/bonk/{id}.gif", Discord, Bonk)),
-            )
-            .service(
-                web::scope("/gh")
-                    .wrap(middleware::DefaultHeaders::new().add((
-                        "Cache-Control",
-                        format!("max-age={}", Github::cache_max_length()),
-                    )))
-                    .service(handler("/{username}.gif", Github, Pet))
-                    .service(handler("/bonk/{username}.gif", Github, Bonk)),
-            )
-            .service(
-                web::scope("/ru")
-                    .wrap(middleware::DefaultHeaders::new().add((
-                        "Cache-Control",
-                        format!("max-age={}", Reddit::cache_max_length()),
-                    )))
-                    .service(handler("/{username}.gif", Reddit, Pet))
-                    .service(handler("/bonk/{username}.gif", Reddit, Bonk))
-            )
+            .service(from_fetcher("/d", Discord))
+            .service(from_fetcher("/gh", Github))
+            .service(from_fetcher("/ru", Reddit))
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
