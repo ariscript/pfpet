@@ -4,6 +4,7 @@ use std::error::Error;
 
 pub mod discord;
 pub mod github;
+pub mod gravatar;
 pub mod reddit;
 
 #[async_trait(?Send)]

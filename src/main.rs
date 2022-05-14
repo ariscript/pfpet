@@ -10,6 +10,7 @@ use actix_cors::Cors;
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
 use env_logger;
+use lib::avatars::gravatar::Gravatar;
 use std::env;
 use tracing::Level;
 use tracing_actix_web::TracingLogger;
@@ -45,6 +46,7 @@ async fn main() -> std::io::Result<()> {
             .service(from_fetcher("/d", Discord))
             .service(from_fetcher("/gh", Github))
             .service(from_fetcher("/ru", Reddit))
+            .service(from_fetcher("/ga", Gravatar))
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()
