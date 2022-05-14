@@ -23,5 +23,5 @@ where
             format!("max-age={}", T::cache_max_length()),
         )))
         .service(handler("/{identifier}.gif", fetcher.clone(), Pet))
-        .service(handler("/bonk/{identifier}.gif", fetcher.clone(), Bonk))
+        .service(handler("/bonk/{identifier}.gif", fetcher, Bonk))
 }

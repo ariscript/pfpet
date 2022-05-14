@@ -1,8 +1,7 @@
 pub mod lib;
 
-use crate::lib::avatars::reddit::Reddit;
 use crate::lib::avatars::AvatarFetch;
-use crate::lib::avatars::{discord::Discord, github::Github};
+use crate::lib::avatars::{discord::Discord, github::Github, reddit::Reddit, gravatar::Gravatar};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use crate::lib::service::from_fetcher;
@@ -45,6 +44,7 @@ async fn main() -> std::io::Result<()> {
             .service(from_fetcher("/d", Discord))
             .service(from_fetcher("/gh", Github))
             .service(from_fetcher("/ru", Reddit))
+            .service(from_fetcher("/ga", Gravatar))
     })
     .bind(format!("0.0.0.0:{}", port))?
     .run()

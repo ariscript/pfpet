@@ -18,14 +18,14 @@ where
         async move {
             let avatar = fetcher.get_avatar(&id).await;
 
-            if let Err(_) = avatar {
+            if avatar.is_err() {
                 return HttpResponse::new(StatusCode::NOT_FOUND);
             }
 
             let avatar = avatar.unwrap();
             let filtered = filter.convert_bytes(avatar);
 
-            if let Err(_) = filtered {
+            if filtered.is_err() {
                 return HttpResponse::new(StatusCode::INTERNAL_SERVER_ERROR);
             }
 

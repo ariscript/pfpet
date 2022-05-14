@@ -65,14 +65,14 @@ impl AvatarFetch for Reddit {
         let user: RedditAPIUser = res.json().await?;
         debug!("{:?}", user);
 
-        if let None = user.data.icon_img {
+        if user.data.icon_img.is_none() {
             return Err(Box::new(ErrorNotFound(
                 "icon_img not present for this user",
             )));
         }
 
         let url = user.data.icon_img.unwrap();
-        let url = url.split("?").collect::<Vec<_>>()[0];
+        let url = url.split('?').collect::<Vec<_>>()[0];
         debug!("reddit: {user} url: {url}", user = username, url = url);
 
         let img = awc::Client::default().get(url).send().await?.body().await?;
