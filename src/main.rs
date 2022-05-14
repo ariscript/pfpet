@@ -1,8 +1,7 @@
 pub mod lib;
 
-use crate::lib::avatars::reddit::Reddit;
 use crate::lib::avatars::AvatarFetch;
-use crate::lib::avatars::{discord::Discord, github::Github};
+use crate::lib::avatars::{discord::Discord, github::Github, reddit::Reddit, gravatar::Gravatar};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use crate::lib::service::from_fetcher;
@@ -10,7 +9,6 @@ use actix_cors::Cors;
 use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
 use env_logger;
-use lib::avatars::gravatar::Gravatar;
 use std::env;
 use tracing::Level;
 use tracing_actix_web::TracingLogger;
