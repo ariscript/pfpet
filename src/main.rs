@@ -1,7 +1,7 @@
 pub mod lib;
 
 use crate::lib::avatars::AvatarFetch;
-use crate::lib::avatars::{discord::Discord, github::Github, reddit::Reddit, gravatar::Gravatar};
+use crate::lib::avatars::{discord::Discord, github::Github, gravatar::Gravatar, reddit::Reddit};
 use crate::lib::filters::{bonk::Bonk, pet::Pet};
 use crate::lib::handler::handler;
 use crate::lib::service::from_fetcher;
