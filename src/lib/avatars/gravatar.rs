@@ -61,10 +61,10 @@ impl AvatarFetch for Gravatar {
 
         CACHE
             .insert(
-                format!("{:x}", digest.clone()),
+                email.clone(),
                 img.clone(),
                 Duration::from_secs(Self::cache_max_length()),
-            ) // 30 minutes
+            )
             .await;
 
         Ok(img)
