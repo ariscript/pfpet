@@ -4,6 +4,7 @@ use image::{Frame, ImageError};
 use std::error::Error;
 
 pub mod bonk;
+pub mod cancel;
 pub mod pet;
 
 pub trait ImageFilter: Clone {
