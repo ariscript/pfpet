@@ -9,18 +9,23 @@ Current base URL: `https://pfpet.herokuapp.com/`
 
 > Note: The `.gif` extension in the URL is required because the Discord client will only render as a static image if there is no "extension".
 
-| URL                       | Description                               |
-| ------------------------- | ----------------------------------------- |
-| `/d/{id}.gif`             | Gets a Discord user's avatar and pets it  |
-| `/d/bonk/{id}.gif`        | Gets a Discord user's avatar and bonks it |
-| `/gh/{username}.gif`      | Gets a GitHub user's avatar and pets it   |
-| `/gh/bonk/{username}.gif` | Gets a GitHub user's avatar and bonks it  |
-| `/ru/{username}.gif`      | Gets a Reddit user's avatar and pets it   |
-| `/ru/bonk/{username}.gif` | Gets a Reddit user's avatar and bonks it  |
-| `/ga/{email}.gif`         | Gets a Reddit user's avatar and pets it   |
-| `/ga/bonk/{email}.gif`    | Gets a Reddit user's avatar and bonks it  |
+| URL                           | Description                                              |
+| ----------------------------- | -------------------------------------------------------- |
+| `/d/{filter}/{id}.gif`        | Gets a Discord user's avatar and applies a filter to it  |
+| `/gh/{filter}/{username}.gif` | Gets a GitHub user's avatar and applies a filter to it   |
+| `/ru/{filter}/{username}.gif` | Gets a Reddit user's avatar and applies a filter to it   |
+| `/ga/{filter}/{email}.gif`    | Gets a Gravatar user's avatar and applies a filter to it |
 
-More endpoints will be added soon... You can help too!
+## Filters
+
+| Name     | Description |
+| -------- | ----------- |
+| nothing  | Pets        |
+| `pet`    | Pets        |
+| `bonk`   | Bonks       |
+| `cancel` | Cancels     |
+
+More endpoints and filters will be added soon... You can help too!
 
 ## Contributing
 
